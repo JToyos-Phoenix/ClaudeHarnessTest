@@ -1,0 +1,5 @@
+# Normalize line endings in the repository (stored as LF).
+* text=auto
+
+# Shell scripts must stay LF on every checkout, or bash fails on Windows clones.
+*.sh text eol=lf

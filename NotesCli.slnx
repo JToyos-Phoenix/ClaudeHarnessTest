@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NotesCli/NotesCli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NotesCli.Tests/NotesCli.Tests.csproj" />
+  </Folder>
+</Solution>

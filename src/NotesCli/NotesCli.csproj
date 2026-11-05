@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Rule (docs/architecture.md): no PackageReference here. Base Class Library only. init.ps1 enforces it. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>NotesCli</RootNamespace>
+  </PropertyGroup>
+</Project>

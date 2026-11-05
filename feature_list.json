@@ -1,0 +1,118 @@
+{
+  "project": "notes-cli",
+  "description": "Minimal notes CLI in C# (.NET 10). A teaching example of Harness Engineering, ported from the Python original betta-tech/ejemplo-harness-subagentes.",
+  "cli": "In acceptance criteria, `notes <args>` is shorthand for `dotnet run --project src/NotesCli -- <args>`.",
+  "rules": {
+    "one_feature_at_a_time": true,
+    "require_tests_to_close": true,
+    "valid_status": ["pending", "in_progress", "done", "blocked"]
+  },
+  "features": [
+    {
+      "id": 1,
+      "name": "storage_layer",
+      "title": "JSON storage layer",
+      "description": "Atomic read/write of notes in a JSON file. Creates the file if it does not exist.",
+      "acceptance": [
+        "src/NotesCli/NoteStorage.cs exists with Load() and Save(notes)",
+        "Save() is atomic (write to a temp file in the same folder + File.Move with overwrite)",
+        "Load() returns an empty list if the file does not exist",
+        "tests/NotesCli.Tests/NoteStorageTests.cs covers the 3 cases above"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 2,
+      "name": "note_model",
+      "title": "Note model",
+      "description": "Immutable record that represents a note with Id, Title, Body, CreatedAt.",
+      "acceptance": [
+        "src/NotesCli/Note.cs contains the sealed record Note",
+        "Note.New(title, body, existing) assigns an incremental id and CreatedAt in ISO 8601 (UTC, seconds)",
+        "tests/NotesCli.Tests/NoteTests.cs validates creation, id increment and immutability"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 3,
+      "name": "cli_add_list",
+      "title": "add and list commands",
+      "description": "Add a note and list all existing notes.",
+      "acceptance": [
+        "`notes add \"title\" --body \"text\"` prints the created id as `id=<n>`",
+        "`notes list` prints one line per note: `<id>\\t<created_at>\\t<title>`",
+        "tests/NotesCli.Tests/CliTests.cs covers both commands with a temporary file"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 4,
+      "name": "cli_show_delete",
+      "title": "show and delete commands",
+      "description": "Show and delete notes by id.",
+      "acceptance": [
+        "`notes show <id>` prints title, date and body (one per line)",
+        "`notes delete <id>` deletes the note and confirms with a message",
+        "Both commands return exit code != 0 if the id does not exist",
+        "tests/NotesCli.Tests/CliTests.cs covers success and failure"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 5,
+      "name": "cli_search",
+      "title": "search command",
+      "description": "Substring search in title or body (case-insensitive).",
+      "acceptance": [
+        "`notes search \"word\"` lists the notes that contain the word",
+        "If there are no matches, exit code 1 and a clear message",
+        "tests/NotesCli.Tests/CliTests.cs covers match, no match and case-insensitivity"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 6,
+      "name": "cli_edit",
+      "title": "edit command",
+      "description": "Change the title and/or body of an existing note by id.",
+      "acceptance": [
+        "`notes edit <id> --title \"new\"` updates only the title",
+        "`notes edit <id> --body \"new\"` updates only the body",
+        "Passing both flags updates both fields in the same call",
+        "If no flag is passed, exit code != 0 and a clear message",
+        "If the id does not exist, exit code != 0 and a message on stderr",
+        "tests/NotesCli.Tests/CliTests.cs covers success (each flag and both), missing id and no flags"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 7,
+      "name": "cli_recent",
+      "title": "recent command",
+      "description": "List the N most recent notes, ordered by created_at descending.",
+      "acceptance": [
+        "`notes recent` lists the 5 most recent notes by default",
+        "`notes recent --limit 10` changes the number",
+        "Order is by `created_at` from newest to oldest",
+        "Each line follows the format `<id>\\t<created_at>\\t<title>` (same as `list`)",
+        "If there are no notes, exit code 0 and nothing is printed (consistent with `list`)",
+        "If `--limit` is <= 0, exit code != 0 and a clear message on stderr",
+        "tests/NotesCli.Tests/CliTests.cs covers: default order, custom limit, empty file, invalid limit"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 8,
+      "name": "cli_description",
+      "title": "description change",
+      "description": "The description line of the general help text says TEST23 instead of `Minimal notes CLI.`.",
+      "acceptance": [
+        "`notes --help` prints `TEST23` as the description line instead of `Minimal notes CLI.` (stdout, exit 0)",
+        "The general usage printed on stderr for `notes` with no command (and for an unknown command) also shows `TEST23` instead of `Minimal notes CLI.` (exit 2)",
+        "The rest of the general help (the usage line and the command list) and all exit codes are unchanged",
+        "tests/NotesCli.Tests/CliTests.cs asserts that `TEST23` is present and `Minimal notes CLI.` is absent, for both `--help` and no command"
+      ],
+      "status": "done"
+    }
+  ]
+}
