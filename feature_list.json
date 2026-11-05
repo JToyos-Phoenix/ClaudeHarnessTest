@@ -127,7 +127,7 @@
         "tests/NotesCli.Tests/CliTests.cs pins every full row of the command list (signature and help columns), not just the command names",
         "All existing tests still pass"
       ],
-      "status": "pending"
+      "status": "done"
     }
   ]
 }

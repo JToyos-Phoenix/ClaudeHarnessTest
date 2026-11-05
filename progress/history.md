@@ -57,3 +57,20 @@
 - **Leftovers (out of scope, candidate cleanup feature):** `Cli.cs:224` over 120 cols,
   `Cli.cs:245` `+ Environment.NewLine`, `Cli.cs:243` collection initializer instead of a
   collection expression; command-list test pins names/order only, not help columns.
+
+## 2026-11-05: Feature 9 `cli_conventions_cleanup`
+- **Agents:** leader (Claude Opus 5.5) -> implementer -> reviewer. Project now under git
+  (baseline commit `8e30cd7`, feature 9 spec added in `34dc64d`).
+- **Plan:** harden the command-list test first (green on unchanged code, then mutation-checked);
+  refactor only what the acceptance names; prove help output byte-identical to `8e30cd7`.
+- **Changes:** `src/NotesCli/Cli.cs` (line 224 wrapped to <= 120 cols; `GeneralUsage()` uses a
+  collection expression with spread and interpolation instead of `new List` + `AddRange` + `+`);
+  `tests/NotesCli.Tests/CliTests.cs` (`Run_ListsEveryCommandAfterDescription_WhenHelpRequested`
+  now pins the 7 full padded rows). Report: `progress/impl_cli_conventions_cleanup.md`.
+- **Verification:** `./init.sh` green, 47 tests pass. Reviewer rebuilt `8e30cd7` out of repo:
+  15 CLI cases byte-identical (stdout, stderr, exit code); hardened test fails under 6 mutations.
+- **Closure:** `APPROVED` in `progress/review_cli_conventions_cleanup.md`; feature 9 `done`.
+- **Leftovers (out of scope, candidate follow-ups):** `Cli.cs:182` `new List<string>()` and
+  `Cli.cs:265` `new[] { Name }` (collection expressions); `ProgramEndToEndTests.cs:5` and
+  `TempDirectory.cs:3` over 120 cols; no in-process test for the "arguments are required"
+  message, the help trailing newline, or the blank line before `notes: error:`.

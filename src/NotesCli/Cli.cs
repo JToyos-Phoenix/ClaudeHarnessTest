@@ -221,7 +221,9 @@ public static class Cli
         if (positionals.Count < command.Positionals.Length)
         {
             var missing = command.Positionals[positionals.Count..];
-            throw new UsageException(command.Usage, $"the following arguments are required: {string.Join(", ", missing)}");
+            throw new UsageException(
+                command.Usage,
+                $"the following arguments are required: {string.Join(", ", missing)}");
         }
 
         if (positionals.Count > command.Positionals.Length)
@@ -240,9 +242,16 @@ public static class Cli
 
     private static string GeneralUsage()
     {
-        var lines = new List<string> { $"usage: {ProgramName} <command> [options]", "", "TEST23", "", "commands:" };
-        lines.AddRange(Commands.Select(c => $"  {c.Signature,-40} {c.Help}"));
-        return string.Join(Environment.NewLine, lines) + Environment.NewLine;
+        string[] lines =
+        [
+            $"usage: {ProgramName} <command> [options]",
+            "",
+            "TEST23",
+            "",
+            "commands:",
+            .. Commands.Select(c => $"  {c.Signature,-40} {c.Help}"),
+        ];
+        return $"{string.Join(Environment.NewLine, lines)}{Environment.NewLine}";
     }
 
     private sealed record Command(

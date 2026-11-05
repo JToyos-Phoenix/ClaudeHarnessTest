@@ -418,8 +418,17 @@ public sealed class CliTests : IDisposable
         var (code, output, _) = Run("--help");
 
         Assert.Equal(0, code);
-        string[] expected = ["add", "list", "show", "delete", "search", "edit", "recent"];
-        Assert.Equal(expected, Lines(output)[5..].Select(line => line.TrimStart().Split(' ')[0]));
+        string[] expected =
+        [
+            "  add <title> [--body BODY]                Add a note.",
+            "  list                                     List all notes.",
+            "  show <id>                                Show a note by id.",
+            "  delete <id>                              Delete a note by id.",
+            "  search <query>                           Search notes by word.",
+            "  edit <id> [--title TITLE] [--body BODY]  Edit a note by id.",
+            "  recent [--limit LIMIT]                   List the most recent notes (default 5).",
+        ];
+        Assert.Equal(expected, Lines(output)[5..]);
     }
 
     private static void AssertGeneralUsageHeader(string text)
