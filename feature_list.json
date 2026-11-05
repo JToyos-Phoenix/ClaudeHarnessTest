@@ -113,6 +113,21 @@
         "tests/NotesCli.Tests/CliTests.cs asserts that `TEST23` is present and `Minimal notes CLI.` is absent, for both `--help` and no command"
       ],
       "status": "done"
+    },
+    {
+      "id": 9,
+      "name": "cli_conventions_cleanup",
+      "title": "Cli.cs conventions cleanup",
+      "description": "Fix pre-existing docs/conventions.md violations in src/NotesCli/Cli.cs flagged by the feature 7 and 8 reviews, with no change in behaviour.",
+      "acceptance": [
+        "Every line in src/NotesCli/Cli.cs is at most 120 characters (line 224 in `ParseArguments` is 123 today)",
+        "`GeneralUsage()` builds its lines with a collection expression instead of `new List<string> { ... }`",
+        "`GeneralUsage()` uses no `+` string concatenation (today it appends `+ Environment.NewLine`)",
+        "The general help output (`notes --help`, `-h`, no command, unknown command) is byte-for-byte identical to commit 8e30cd7, and all exit codes are unchanged",
+        "tests/NotesCli.Tests/CliTests.cs pins every full row of the command list (signature and help columns), not just the command names",
+        "All existing tests still pass"
+      ],
+      "status": "pending"
     }
   ]
 }
